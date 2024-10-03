@@ -1,3 +1,5 @@
+package org.example.ops;
+
 /**
  * @description:
  *
@@ -37,15 +39,16 @@
  * grid[i][j] 的值为 '0' 或 '1'
  *
  */
-class Solution8 {
+public class Solution8 {
     void dfs(char[][] grid, int r, int c) {
         int nr = grid.length;
         int nc = grid[0].length;
-
-        if (r < 0 || c > 0 || r >= nr || c >= nc || grid[r][c] == '0') {
+        //修改1，越界边界条件错误，c>0改为c<0
+        if (r < 0 || c < 0 || r >= nr || c >= nc || grid[r][c] == '0') {
             return;
         }
-        grid[r][c] = '1';
+        //修改2，此处应是将访问过的地方标记，为防止重复访问，应标记为'0'而不是'1'
+        grid[r][c] = '0';
         dfs(grid, r - 1, c);
         dfs(grid, r + 1, c);
         dfs(grid, r, c - 1);
@@ -53,15 +56,17 @@ class Solution8 {
     }
 
     public int numIslands(char[][] grid) {
-        if (grid == null || grid.length <= 1) {
+        //修改3，当只有一个单位时，应依旧考虑是否为岛屿，将<=1改为==0
+        if (grid == null || grid.length == 0) {
             return 0;
         }
 
-        int nr = grid.length;
-        int nc = grid[0].length;
-        int num_islands = 0;
+        int nr = grid.length;//行数
+        int nc = grid[0].length;//列数
+        int num_islands = 0;//岛屿计数
         for (int r = 0; r < nr; ++r) {
-            for (int c = 0; r < nc; ++c) {
+            //修改4，循环迭代变量应为c,r<nc改为c<nc
+            for (int c = 0; c < nc; ++c) {
                 if (grid[r][c] == '1') {
                     ++num_islands;
                     dfs(grid, r, c);
